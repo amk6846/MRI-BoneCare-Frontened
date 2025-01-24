@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +16,13 @@ const Navbar = () => {
       <div className="flex justify-between items-center w-full h-16 px-6">
         {/* Logo Section */}
         <div className="flex items-center">
-          <Image src="/images/Logo.jpg" alt="Logo" width={40} height={40} className="rounded-full"/>
+          <Image
+            src="/images/Logo.jpg"
+            alt="Logo"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
           <span className="text-lg font-semibold ml-2 cursor-pointer">
             Bone<span className="text-green-700">Care</span>
           </span>
@@ -24,16 +31,30 @@ const Navbar = () => {
         {/* Desktop Menu (Hidden on Mobile) */}
         <ul className="hidden sm:flex space-x-6">
           <li>
-            <a href="#" className="text-gray-900 hover:text-blue-500">Home</a>
+            <Link href="/" className="text-gray-900 hover:text-blue-500">
+              Home
+            </Link>
           </li>
           <li>
-            <a href="#" className="text-gray-900 hover:text-blue-500">Tools</a>
+            <Link href="/pages/Tools.js" className="text-gray-900 hover:text-blue-500">
+              Tools
+            </Link>
           </li>
           <li>
-            <a href="#" className="text-gray-900 hover:text-blue-500">Solution</a>
+            <Link
+              href="/solution"
+              className="text-gray-900 hover:text-blue-500"
+            >
+              Solution
+            </Link>
           </li>
           <li>
-            <a href="#" className="text-gray-900 hover:text-blue-500">About Us</a>
+            <Link
+              href="/about-us"
+              className="text-gray-900 hover:text-blue-500"
+            >
+              About Us
+            </Link>
           </li>
         </ul>
 
@@ -73,16 +94,24 @@ const Navbar = () => {
         {/* Mobile Menu Items */}
         <ul className="space-y-6 text-white text-xl">
           <li>
-            <a href="#" className="hover:text-blue-400">Home</a>
+            <a href="#" className="hover:text-blue-400">
+              Home
+            </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">Tools</a>
+            <a href="#" className="hover:text-blue-400">
+              Tools
+            </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">Solution</a>
+            <a href="#" className="hover:text-blue-400">
+              Solution
+            </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">About Us</a>
+            <a href="#" className="hover:text-blue-400">
+              About Us
+            </a>
           </li>
         </ul>
 
