@@ -36,8 +36,8 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/pages/Tools.js" className="text-gray-900 hover:text-blue-500">
-              Tools
+            <Link href="/tools" className="text-gray-900 hover:text-blue-500">
+              MRI Scan
             </Link>
           </li>
           <li>
@@ -50,7 +50,7 @@ const Navbar = () => {
           </li>
           <li>
             <Link
-              href="/about-us"
+              href="/About"
               className="text-gray-900 hover:text-blue-500"
             >
               About Us
