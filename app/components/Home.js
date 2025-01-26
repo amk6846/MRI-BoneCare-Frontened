@@ -1,10 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const Home = () => {
   return (
     <>
-    <div className='h-screen w-full relative'>
+    <div className='h-screen w-full relative' id='Home'>
     <Image src={'/images/bg.jpg'} alt="Background" layout="fill" objectFit="cover" />
     {/* Heading , subheading , Learn More Button */}
     <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
@@ -18,7 +19,7 @@ const Home = () => {
         </h2>
     </div>
     <div className='absolute inset-16 mt-6 flex items-center justify-center top-80'>
-        <button className='px-5 py-3 bg-pink-600 text-white hover:bg-black font-semibold rounded-md'>Lean More</button>
+        <Link href={"/tools"} className='px-5 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold rounded-md'>Lean More</Link>
     </div>
     </div>
     </>

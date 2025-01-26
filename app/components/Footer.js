@@ -6,6 +6,9 @@ import { FaFacebook, FaInstagramSquare, FaTwitter, FaLinkedin } from "react-icon
 import { FaYoutube } from "react-icons/fa6";
 
 const Footer = () => {
+  const smoothScroll = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <footer className="bg-gray-800 text-white py-12">
       <div className="container mx-auto px-4">
@@ -29,10 +32,11 @@ const Footer = () => {
           <div className="w-full md:w-1/3 mt-6 md:mt-0">
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3 flex flex-col items-center md:items-start">
-              <li><Link href="/" className="text-gray-400 hover:text-white text-lg">Home</Link></li>
-              <li><Link href="/about" className="text-gray-400 hover:text-white text-lg">Tool</Link></li>
-              <li><Link href="/services" className="text-gray-400 hover:text-white text-lg">Solution</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-white text-lg">About</Link></li>
+              <li><button onClick={() => smoothScroll("Home")} className="text-gray-400 hover:text-white text-lg">Home</button></li>
+              <li><Link href="/tools" className="text-gray-400 hover:text-white text-lg">Tools</Link></li>
+              <li><Link href="/Reports" className="text-gray-400 hover:text-white text-lg">Reports</Link></li>
+              <li><Link href="/Contact" className="text-gray-400 hover:text-white text-lg">Contact Us</Link></li>
+              <li><Link href="/About" className="text-gray-400 hover:text-white text-lg">About Us</Link></li>
             </ul>
           </div>
 

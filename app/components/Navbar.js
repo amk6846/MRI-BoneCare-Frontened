@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className="relative w-full bg-white border-b-2 shadow-md">
       {/* Navbar Container */}
-      <div className="flex justify-between items-center w-full h-16 px-6">
+      <div className="flex justify-between items-center w-full h-20 px-6">
         {/* Logo Section */}
         <div className="flex items-center">
           <Image
@@ -29,7 +29,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Menu (Hidden on Mobile) */}
-        <ul className="hidden sm:flex space-x-6">
+        <ul className="hidden md:flex space-x-6">
           <li>
             <Link href="/" className="text-gray-900 hover:text-blue-500">
               Home
@@ -42,10 +42,18 @@ const Navbar = () => {
           </li>
           <li>
             <Link
-              href="/solution"
+              href="/Reports"
               className="text-gray-900 hover:text-blue-500"
             >
-              Solution
+              Results & Reports
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/Contact"
+              className="text-gray-900 hover:text-blue-500"
+            >
+              Contact Us
             </Link>
           </li>
           <li>
@@ -60,12 +68,12 @@ const Navbar = () => {
 
         {/* Desktop Buttons (Hidden on Mobile) */}
         <div className="hidden sm:flex items-center space-x-4">
-          <button className="px-4 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full hover:bg-blue-100">
+          <Link href={"/SignUp"}><button className="px-4 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full hover:bg-blue-100">
             Log In
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700">
+          </button></Link>
+          <Link href={"/SignUp"}><button className="px-4 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-full hover:bg-yellow-400">
             Sign Up
-          </button>
+          </button></Link>
         </div>
 
         {/* Hamburger Button (Mobile) */}
@@ -94,35 +102,40 @@ const Navbar = () => {
         {/* Mobile Menu Items */}
         <ul className="space-y-6 text-white text-xl">
           <li>
-            <a href="#" className="hover:text-blue-400">
+            <a href="/" className="hover:text-blue-400">
               Home
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">
+            <a href="/tools" className="hover:text-blue-400">
               Tools
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">
-              Solution
+            <a href="/Reports" className="hover:text-blue-400">
+              Result & Reports
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-400">
-              About Us
+            <a href="/Contact" className="hover:text-blue-400">
+               Contact Us
+            </a>
+          </li>
+          <li>
+            <a href="/About" className="hover:text-blue-400">
+               About Us
             </a>
           </li>
         </ul>
 
         {/* Mobile Buttons (Inside Menu) */}
         <div className="mt-6 flex flex-col space-y-4">
-          <button className="px-6 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full bg-white hover:bg-blue-100">
+        <Link href={"/SignUp"}><button className="px-6 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full bg-white hover:bg-blue-100">
             Log In
-          </button>
-          <button className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700">
+          </button></Link>
+          <Link href={"/SignUp"}><button className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700">
             Sign Up
-          </button>
+          </button></Link>
         </div>
       </div>
     </nav>

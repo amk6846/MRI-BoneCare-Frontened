@@ -18,7 +18,6 @@ const page = () => {
       <Testimonials />
       <FandQ />
       <Footer />
-
     </>
   );
 };

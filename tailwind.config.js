@@ -26,5 +26,27 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [addVariablesForColors],
 };
+
+function addVariablesForColors({ addBase, theme }) {
+  const allColors = theme("colors");
+
+  // Flatten the color object (handling nested colors like 'blue.500')
+  const flattenColors = (obj, prefix = "") =>
+    Object.entries(obj).reduce((acc, [key, val]) => {
+      if (typeof val === "object") {
+        Object.assign(acc, flattenColors(val, `${prefix}${key}-`));
+      } else {
+        acc[`--${prefix}${key}`] = val;
+      }
+      return acc;
+    }, {});
+
+  const newVars = flattenColors(allColors);
+
+  addBase({
+    ":root": newVars,
+  });
+}
+
