@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
+        'pulse-slow': 'pulse 3s ease-in-out infinite',
         move: "move 5s linear infinite",
       },
       keyframes: {
@@ -17,7 +18,7 @@ module.exports = {
         },
       },
       screens: {
-        'smm': '550px'
+        smm: "550px",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -49,4 +50,3 @@ function addVariablesForColors({ addBase, theme }) {
     ":root": newVars,
   });
 }
-

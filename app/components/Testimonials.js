@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 // Testimonials array
 const testimonials = [
   {
-    name: "Dr. Moazzam Ali",
+    name: "Dr. Moazzam Ali Sani",
     title: "Orthopedic Surgeon",
     feedback: "This AI-powered MRI analysis system is a game-changer for detecting bone tumors and infections early.",
     image: "/images/doctors/doc1.jpg",

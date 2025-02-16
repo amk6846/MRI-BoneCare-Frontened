@@ -10,6 +10,8 @@ import FandQ from "./components/FandQ";
 const page = () => {
   return (
     <>
+    {/* splash screen */}
+
     {/* Final Year Project (FYP-1) Mri Bone Care Website */}
       <Navbar />
       <Home />

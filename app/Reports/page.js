@@ -7,7 +7,7 @@ const page = () => {
     <div>
         <Navbar />
     </div>
-    <h1>This Is Report And Result Page</h1>
+    <h1>Display Result Page</h1>
 
 
     </>

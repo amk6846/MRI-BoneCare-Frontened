@@ -67,7 +67,7 @@ const Navbar = () => {
         </ul>
 
         {/* Desktop Buttons (Hidden on Mobile) */}
-        <div className="hidden sm:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-4">
           <Link href={"/SignUp"}><button className="px-4 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full hover:bg-blue-100">
             Log In
           </button></Link>
@@ -78,7 +78,7 @@ const Navbar = () => {
 
         {/* Hamburger Button (Mobile) */}
         <button
-          className="sm:hidden text-3xl text-blue-700 focus:outline-none"
+          className="md:hidden text-3xl text-blue-700 focus:outline-none"
           onClick={toggleMenu}
         >
           {isMenuOpen ? "✖" : "☰"}

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Navbar from "../components/Navbar";
-import { Spotlight } from "../components/ui/spotlight-new";
+// import { Spotlight } from "../components/ui/spotlight-new";
 
 const page = () => {
   return (
@@ -137,9 +137,6 @@ const page = () => {
             </div>
           </div>
         </div>
-
-
-
         {/* Detection, Segmentation, & Classification */}
         <dev
           id="detection-segmentation-classification"
@@ -235,7 +232,7 @@ const page = () => {
             Try our AI-powered MRI analysis for free today!
           </p>
           <a
-            href="/sign-up"
+            href="/tools"
             className="mt-6 inline-block bg-yellow-500 text-gray-900 py-4 px-10 rounded-full text-xl font-semibold hover:bg-yellow-400 transition duration-300"
           >
             Get Started for Free
