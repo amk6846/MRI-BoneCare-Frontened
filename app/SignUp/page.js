@@ -1,11 +1,15 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import { SignupFormDemo } from '../components/SignupFormDemo'
 
 const page = () => {
   return (
     <>
     <div><Navbar /></div>
-    <h2 className='text-center text-4xl text-blue-700'>This Is Sign Up Page</h2>
+    <div className='pt-10 min-h-screen flex items-center justify-center bg-gray-200'>
+    <SignupFormDemo />
+
+    </div>
 
     
     </>

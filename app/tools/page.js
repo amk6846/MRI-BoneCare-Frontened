@@ -25,7 +25,7 @@ const Page = () => {
             alt="Bone Scan"
             className="w-3/5 sm:w-2/5 rounded-2xl"
           />
-          <h1 className="text-white font-sans font-bold text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-4">
+          <h1 className="text-white  font-sans font-bold text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-4">
             Upload MRI <br /> Bone Scan
           </h1>
           <h3 className="text-blue-600 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mt-2">

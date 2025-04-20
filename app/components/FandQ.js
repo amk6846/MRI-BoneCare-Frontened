@@ -21,7 +21,7 @@ const FandQ = () => {
   };
 
   return (
-    <div className="w-full min-h-[110vh] bg-gray-100 py-4">
+    <div className="w-full min-h-[120vh] bg-gray-100 py-4">
       <div className="max-w-6xl mx-auto px-4"> {/* Centers content */}
         {/* Title */}
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center pb-8">

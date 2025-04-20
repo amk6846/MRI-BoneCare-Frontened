@@ -68,12 +68,10 @@ const Navbar = () => {
 
         {/* Desktop Buttons (Hidden on Mobile) */}
         <div className="hidden lg:flex items-center space-x-4">
-          <Link href={"/SignUp"}><button className="px-4 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full hover:bg-blue-100">
+          <Link href={"/Login"}><button className="px-8 py-3  bg-yellow-500 text-gray-900 font-semibold rounded-full hover:bg-yellow-400">
             Log In
-          </button></Link>
-          <Link href={"/SignUp"}><button className="px-4 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-full hover:bg-yellow-400">
-            Sign Up
-          </button></Link>
+          </button>
+          </Link>
         </div>
 
         {/* Hamburger Button (Mobile) */}
@@ -130,12 +128,10 @@ const Navbar = () => {
 
         {/* Mobile Buttons (Inside Menu) */}
         <div className="mt-6 flex flex-col space-y-4">
-        <Link href={"/SignUp"}><button className="px-6 py-2 text-blue-600 font-semibold border-2 border-blue-600 rounded-full bg-white hover:bg-blue-100">
+        <Link href={"/Login"}><button className="px-8 py-3  bg-yellow-500 text-gray-900 font-semibold rounded-full hover:bg-yellow-400">
             Log In
-          </button></Link>
-          <Link href={"/SignUp"}><button className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700">
-            Sign Up
-          </button></Link>
+          </button>
+          </Link>
         </div>
       </div>
     </nav>
