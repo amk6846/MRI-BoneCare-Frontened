@@ -13,10 +13,50 @@ import { useRouter } from "next/navigation";
 export function SignupFormDemo() {
 
     const router = useRouter();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        const firstName = e.target.firstname.value;
+        const lastName = e.target.lastname.value;
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const confirmPassword = e.target.confirmpassword.value;
+      
+        // Basic validation
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+      
+        try {
+          const res = await fetch("/api/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              email,
+              password,
+            }),
+          });
+      
+          if (res.ok) {
+            const data = await res.json();
+            alert(data.message); // Show success message
+            console.log("Signup Successful:", data);
+            router.push("/Login"); // Redirect to login page
+          } else {
+            const errorData = await res.json();
+            alert(errorData.message || "Something went wrong");
+            console.error("Signup Failed:", errorData);
+          }
+        } catch (error) {
+          console.error("Error during signup:", error);
+          alert("Error connecting to server");
+        }
+      };
 
   return (
     <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-gray-200 p-4 md:rounded-2xl md:p-8 dark:bg-black">

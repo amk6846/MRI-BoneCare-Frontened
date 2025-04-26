@@ -1,17 +1,44 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react"; // ✅ useState import kiya hai for form data
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
-import { cn } from "@/lib/utils"; // Make sure this utility exists or adjust accordingly
+import { cn } from "@/lib/utils"; // ✅
 
 const LoginPage = () => {
-  const router = useRouter(); // ✅ parentheses added to useRouter
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  // ✅ yeh 2 state add karni hai email/password capture karne ke liye
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Login form submitted");
-    // You can handle login logic here
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }), // ✅ send email and password
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+
+        alert("Login Successful ✅");
+        router.push("/tools"); // ✅ login ke baad home page pe redirect
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Login Failed ❌");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong ❗");
+    }
   };
 
   return (
@@ -30,14 +57,27 @@ const LoginPage = () => {
           </p>
 
           <form className="my-8" onSubmit={handleSubmit}>
+            {/* ✅ Input fields mein value aur onChange add kiya */}
             <LabelInputContainer className="mb-4">
               <Label htmlFor="email">Email Address</Label>
-              <Input id="email" placeholder="abc12@gmail.com" type="email" />
+              <Input
+                id="email"
+                placeholder="abc12@gmail.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </LabelInputContainer>
 
             <LabelInputContainer className="mb-4">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" placeholder="••••••••" type="password" />
+              <Input
+                id="password"
+                placeholder="••••••••"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </LabelInputContainer>
 
             <button
@@ -79,12 +119,14 @@ const LabelInputContainer = ({ children, className }) => (
   </div>
 );
 
-// 👇 Dummy Input & Label components (replace with your own if already defined)
-const Input = ({ id, placeholder, type }) => (
+// ✅ Input ko thoda modify kiya
+const Input = ({ id, placeholder, type, value, onChange }) => (
   <input
     id={id}
     placeholder={placeholder}
     type={type}
+    value={value}
+    onChange={onChange}
     className="px-4 py-2 border rounded-md"
     required
   />
