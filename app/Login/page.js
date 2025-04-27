@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState } from "react"; // ✅ useState import kiya hai for form data
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
-import { cn } from "@/lib/utils"; // ✅
+import { cn } from "@/lib/utils";
 
 const LoginPage = () => {
   const router = useRouter();
-
-  // ✅ yeh 2 state add karni hai email/password capture karne ke liye
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,15 +20,16 @@ const LoginPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // ✅ send email and password
+        body: JSON.stringify({ email, password }),
       });
 
       if (res.ok) {
         const data = await res.json();
         console.log(data);
 
+        localStorage.setItem("isLoggedIn", "true"); // ✅ add kiya localStorage ke liye
         alert("Login Successful ✅");
-        router.push("/tools"); // ✅ login ke baad home page pe redirect
+        router.push("/tools");
       } else {
         const errorData = await res.json();
         alert(errorData.message || "Login Failed ❌");
@@ -57,7 +56,6 @@ const LoginPage = () => {
           </p>
 
           <form className="my-8" onSubmit={handleSubmit}>
-            {/* ✅ Input fields mein value aur onChange add kiya */}
             <LabelInputContainer className="mb-4">
               <Label htmlFor="email">Email Address</Label>
               <Input
@@ -119,7 +117,6 @@ const LabelInputContainer = ({ children, className }) => (
   </div>
 );
 
-// ✅ Input ko thoda modify kiya
 const Input = ({ id, placeholder, type, value, onChange }) => (
   <input
     id={id}
