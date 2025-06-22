@@ -74,7 +74,7 @@ const Testimonials = () => {
                   exit={{ opacity: 0, x: -100, transition: { duration: 0.6, ease: "easeInOut" } }}
                   className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center text-center w-1/3"
                 >
-                  <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="rounded-full mb-4 border-2 border-blue-500 shadow-md" />
+                  <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="rounded-full mb-4 border-2 border-blue-500 shadow-md"/>
                   <h3 className="text-xl font-semibold text-gray-800">{testimonial.name}</h3>
                   <p className="text-gray-600 italic">{testimonial.title} - {testimonial.hospital}</p>
                   <p className="text-gray-700 mt-4">"{testimonial.feedback}"</p>

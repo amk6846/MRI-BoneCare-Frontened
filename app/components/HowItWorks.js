@@ -24,7 +24,7 @@ const HowItWorks = () => {
               className="bg-white shadow-lg rounded-lg p-6 cursor-pointer flex flex-col items-center text-center hover:shadow-2xl transition-all duration-300"
             >
               {/* Use <img> instead of <Image> */}
-              <img src={step.image} alt={step.title} width={60} height={60} className="mb-4" />
+              <img src={step.image} alt={step.title} width={60} height={60} className="mb-4"/>
               <h3 className="text-xl font-semibold text-gray-800">{step.title}</h3>
               <p className="text-gray-600 mt-2">{step.description}</p>
             </div>
