@@ -6,14 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../src/context/AuthContext";
 
 const ResultPage = () => {
-  const { isLoggedIn, loading ,user } = useAuth();
+  const { isLoggedIn, loading, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isDownloading, setIsDownloading] = useState(false);
-
-
   const [imageUrl, setImageUrl] = useState("/sample-mri.jpg");
   const [segmentedUrl, setSegmentedUrl] = useState("/sample-mask.jpg");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const storedMRI = localStorage.getItem("mriImage");
@@ -41,22 +39,23 @@ const ResultPage = () => {
   };
 
   const handleDownload = () => {
-    if (loading) return;
-  
-    if (!isLoggedIn) {
-      alert("Please login to download the report.");
-      router.push("/Login");
-      return;
-    }
-  
-    // Remove blur just before redirect
-    setIsDownloading(true);
-  
+    if (loading || isGenerating) return;
+
+    setIsGenerating(true);
+
     setTimeout(() => {
       router.push(
-        `/TumorReport?name=${encodeURIComponent(result.patientName)}&email=${encodeURIComponent(result.email)}&date=${encodeURIComponent(result.uploadDate)}&detected=${result.tumorDetected}&type=${encodeURIComponent(result.tumorType)}&confidence=${encodeURIComponent(result.confidence)}`
+        `/TumorReport?name=${encodeURIComponent(
+          result.patientName
+        )}&email=${encodeURIComponent(
+          result.email
+        )}&date=${encodeURIComponent(
+          result.uploadDate
+        )}&detected=${result.tumorDetected}&type=${encodeURIComponent(
+          result.tumorType
+        )}&confidence=${encodeURIComponent(result.confidence)}`
       );
-    }, 500); // optional delay so user sees unblur for a moment
+    }, 2000);
   };
 
   return (
@@ -74,21 +73,29 @@ const ResultPage = () => {
               👤 Patient Information
             </h2>
             <div className="text-gray-800 space-y-1">
-              <p><strong>Name:</strong> {result.patientName}</p>
-              <p><strong>Email:</strong> {result.email}</p>
-              <p><strong>Upload Date:</strong> {result.uploadDate}</p>
+              <p>
+                <strong>Name:</strong> {result.patientName}
+              </p>
+              <p>
+                <strong>Email:</strong> {result.email}
+              </p>
+              <p>
+                <strong>Upload Date:</strong> {result.uploadDate}
+              </p>
             </div>
           </div>
 
           {/* Diagnosis */}
-          <div className={`mb-6 ${!isDownloading ? "blur-sm" : ""}`}>
+          <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
               🩺 Diagnosis Result
             </h2>
             {result.tumorDetected ? (
               <div className="bg-red-100 text-red-700 p-4 rounded-md font-medium">
-                ✅ <strong>Tumor Detected</strong><br />
-                <span>Type: {result.tumorType}</span><br />
+                ✅ <strong>Tumor Detected</strong>
+                <br />
+                <span>Type: {result.tumorType}</span>
+                <br />
                 <span>Confidence: {result.confidence}%</span>
               </div>
             ) : (
@@ -99,9 +106,11 @@ const ResultPage = () => {
           </div>
 
           {/* Images */}
-          <div className={`grid md:grid-cols-2 gap-6 transition-all duration-500 ${!isDownloading ? "blur-sm" : ""}`}>
+          <div className="grid md:grid-cols-2 gap-6 transition-all duration-500">
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">🖼️ Original MRI Image</h3>
+              <h3 className="text-lg font-semibold mb-2 text-center">
+                🖼️ Original MRI Image
+              </h3>
               <img
                 src={imageUrl}
                 alt="MRI Scan"
@@ -109,7 +118,9 @@ const ResultPage = () => {
               />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">🎯 Segmented Image</h3>
+              <h3 className="text-lg font-semibold mb-2 text-center">
+                🎯 Segmented Image
+              </h3>
               <img
                 src={segmentedUrl}
                 alt="Segmented Output"
@@ -121,15 +132,43 @@ const ResultPage = () => {
           {/* Download Button */}
           <div className="text-center mt-8">
             <button
-              disabled={loading}
+              disabled={loading || isGenerating}
               onClick={handleDownload}
-              className={`px-8 py-3 text-lg rounded shadow-md transition-colors duration-300 ${
-                loading
+              className={`px-8 py-3 text-lg rounded shadow-md flex items-center justify-center gap-2 transition-colors duration-300 ${
+                loading || isGenerating
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
-              {loading ? "Checking Login..." : "📄 Download PDF Report"}
+              {loading ? (
+                "Checking..."
+              ) : isGenerating ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                  </svg>
+                  Generating Report...
+                </>
+              ) : (
+                "📄 Download PDF Report"
+              )}
             </button>
           </div>
         </div>
