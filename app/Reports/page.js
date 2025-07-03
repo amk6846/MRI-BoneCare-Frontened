@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import Navbar from "../components/Navbar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../../src/context/AuthContext";
+import { useSearchParams } from "next/navigation";
 
-// 👇 Wrap this part in a Suspense-compatible subcomponent
 const ReportContent = () => {
+  const searchParams = useSearchParams();
   const { isLoggedIn, loading, user } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [imageUrl, setImageUrl] = useState("/sample-mri.jpg");
   const [segmentedUrl, setSegmentedUrl] = useState("/sample-mask.jpg");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -32,7 +32,8 @@ const ReportContent = () => {
   const result = {
     patientName: user?.name || searchParams.get("name") || "Unknown",
     email: user?.email || searchParams.get("email") || "unknown@example.com",
-    uploadDate: searchParams.get("date") || new Date().toISOString().split("T")[0],
+    uploadDate:
+      searchParams.get("date") || new Date().toISOString().split("T")[0],
     tumorDetected: searchParams.get("detected") === "true",
     tumorType: searchParams.get("type") || "Unknown Type",
     confidence: searchParams.get("confidence") || "N/A",
@@ -45,7 +46,15 @@ const ReportContent = () => {
 
     setTimeout(() => {
       router.push(
-        `/TumorReport?name=${encodeURIComponent(result.patientName)}&email=${encodeURIComponent(result.email)}&date=${encodeURIComponent(result.uploadDate)}&detected=${result.tumorDetected}&type=${encodeURIComponent(result.tumorType)}&confidence=${encodeURIComponent(result.confidence)}`
+        `/TumorReport?name=${encodeURIComponent(
+          result.patientName
+        )}&email=${encodeURIComponent(
+          result.email
+        )}&date=${encodeURIComponent(
+          result.uploadDate
+        )}&detected=${result.tumorDetected}&type=${encodeURIComponent(
+          result.tumorType
+        )}&confidence=${encodeURIComponent(result.confidence)}`
       );
     }, 2000);
   };
@@ -63,9 +72,15 @@ const ReportContent = () => {
             👤 Patient Information
           </h2>
           <div className="text-gray-800 space-y-1">
-            <p><strong>Name:</strong> {result.patientName}</p>
-            <p><strong>Email:</strong> {result.email}</p>
-            <p><strong>Upload Date:</strong> {result.uploadDate}</p>
+            <p>
+              <strong>Name:</strong> {result.patientName}
+            </p>
+            <p>
+              <strong>Email:</strong> {result.email}
+            </p>
+            <p>
+              <strong>Upload Date:</strong> {result.uploadDate}
+            </p>
           </div>
         </div>
 
@@ -76,8 +91,10 @@ const ReportContent = () => {
           </h2>
           {result.tumorDetected ? (
             <div className="bg-red-100 text-red-700 p-4 rounded-md font-medium">
-              ✅ <strong>Tumor Detected</strong><br />
-              <span>Type: {result.tumorType}</span><br />
+              ✅ <strong>Tumor Detected</strong>
+              <br />
+              <span>Type: {result.tumorType}</span>
+              <br />
               <span>Confidence: {result.confidence}%</span>
             </div>
           ) : (
@@ -93,13 +110,21 @@ const ReportContent = () => {
             <h3 className="text-lg font-semibold mb-2 text-center">
               🖼️ Original MRI Image
             </h3>
-            <img src={imageUrl} alt="MRI Scan" className="rounded-lg border w-full object-contain" />
+            <img
+              src={imageUrl}
+              alt="MRI Scan"
+              className="rounded-lg border w-full object-contain"
+            />
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-2 text-center">
               🎯 Segmented Image
             </h3>
-            <img src={segmentedUrl} alt="Segmented Output" className="rounded-lg border w-full object-contain" />
+            <img
+              src={segmentedUrl}
+              alt="Segmented Output"
+              className="rounded-lg border w-full object-contain"
+            />
           </div>
         </div>
 
@@ -118,9 +143,25 @@ const ReportContent = () => {
               "Checking..."
             ) : isGenerating ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
                 </svg>
                 Generating Report...
               </>
@@ -138,7 +179,7 @@ const ResultPage = () => {
   return (
     <>
       <Navbar />
-      <Suspense fallback={<div className="p-6 text-center">Loading Report...</div>}>
+      <Suspense fallback={<div className="p-6 text-center">Loading report...</div>}>
         <ReportContent />
       </Suspense>
     </>
