@@ -1,31 +1,43 @@
-import connectMongoDB from "@/lib/mongodb";
-import User from "@/models/user";
 import { NextResponse } from "next/server";
+import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
 
-export async function POST(request) {
+const uri = process.env.MONGODB_URI;
+
+export async function POST(req) {
   try {
-    const { email, password } = await request.json();
+    const body = await req.json();
+    const { email, password } = body;
 
-    await connectMongoDB();
+    const client = await MongoClient.connect(uri);
+    const db = client.db("bonecare");
+    const usersCollection = db.collection("users");
 
-    const user = await User.findOne({ email });
+    const user = await usersCollection.findOne({ email });
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // 👇 yeh line check karega kya plain password aur hash password match karte hain
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return NextResponse.json({ message: "Invalid password" }, { status: 401 });
     }
 
-    return NextResponse.json({ message: "Login Successful" }, { status: 200 });
+    // ✅ Combine firstName + lastName
+    const fullName = `${user.firstName} ${user.lastName}`;
+
+    // ✅ Return fullName and email to frontend
+    return NextResponse.json({
+      user: {
+        name: fullName,
+        email: user.email,
+      },
+      token: "dummy-token", // optional: can use JWT later
+    }, { status: 200 });
 
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Error occurred while logging in" }, { status: 500 });
+    console.error("Login error:", error);
+    return NextResponse.json({ message: "Something went wrong ❗" }, { status: 500 });
   }
 }

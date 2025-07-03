@@ -6,9 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../src/context/AuthContext";
 
 const ResultPage = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading ,user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isDownloading, setIsDownloading] = useState(false);
+
 
   const [imageUrl, setImageUrl] = useState("/sample-mri.jpg");
   const [segmentedUrl, setSegmentedUrl] = useState("/sample-mask.jpg");
@@ -24,14 +26,13 @@ const ResultPage = () => {
     if (storedSegmented) {
       setSegmentedUrl(`data:image/jpeg;base64,${storedSegmented}`);
     } else if (storedMRI) {
-      // fallback: use MRI image as placeholder
       setSegmentedUrl(`data:image/jpeg;base64,${storedMRI}`);
     }
   }, []);
 
   const result = {
-    patientName: searchParams.get("name") || "Unknown",
-    email: searchParams.get("email") || "unknown@example.com",
+    patientName: user?.name || searchParams.get("name") || "Unknown",
+    email: user?.email || searchParams.get("email") || "unknown@example.com",
     uploadDate:
       searchParams.get("date") || new Date().toISOString().split("T")[0],
     tumorDetected: searchParams.get("detected") === "true",
@@ -40,72 +41,97 @@ const ResultPage = () => {
   };
 
   const handleDownload = () => {
+    if (loading) return;
+  
     if (!isLoggedIn) {
       alert("Please login to download the report.");
       router.push("/Login");
       return;
     }
-    alert("PDF Download Coming Soon...");
+  
+    // Remove blur just before redirect
+    setIsDownloading(true);
+  
+    setTimeout(() => {
+      router.push(
+        `/TumorReport?name=${encodeURIComponent(result.patientName)}&email=${encodeURIComponent(result.email)}&date=${encodeURIComponent(result.uploadDate)}&detected=${result.tumorDetected}&type=${encodeURIComponent(result.tumorType)}&confidence=${encodeURIComponent(result.confidence)}`
+      );
+    }, 500); // optional delay so user sees unblur for a moment
   };
 
   return (
     <>
       <Navbar />
-      <div className="p-8 bg-gray-100 min-h-screen">
-        <h1 className="text-2xl font-bold mb-4 text-center">MRI Scan Report</h1>
+      <div className="p-6 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-2xl">
+          <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
+            🧠 MRI Tumor Diagnosis Report
+          </h1>
 
-        <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
           {/* Patient Info */}
-          <h2 className="text-lg font-semibold mb-2">Patient Info</h2>
-          <p>
-            <strong>Name:</strong> {result.patientName}
-          </p>
-          <p>
-            <strong>Email:</strong> {result.email}
-          </p>
-          <p>
-            <strong>Upload Date:</strong> {result.uploadDate}
-          </p>
-
-          <hr className="my-4" />
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
+              👤 Patient Information
+            </h2>
+            <div className="text-gray-800 space-y-1">
+              <p><strong>Name:</strong> {result.patientName}</p>
+              <p><strong>Email:</strong> {result.email}</p>
+              <p><strong>Upload Date:</strong> {result.uploadDate}</p>
+            </div>
+          </div>
 
           {/* Diagnosis */}
-          <h2 className="text-lg font-semibold mb-2">Diagnosis</h2>
-          {result.tumorDetected ? (
-            <div className="text-red-600 font-bold">
-              Tumor Detected ✅ <br />
-              Type: {result.tumorType} <br />
-              Confidence: {result.confidence}%
+          <div className={`mb-6 ${!isDownloading ? "blur-sm" : ""}`}>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
+              🩺 Diagnosis Result
+            </h2>
+            {result.tumorDetected ? (
+              <div className="bg-red-100 text-red-700 p-4 rounded-md font-medium">
+                ✅ <strong>Tumor Detected</strong><br />
+                <span>Type: {result.tumorType}</span><br />
+                <span>Confidence: {result.confidence}%</span>
+              </div>
+            ) : (
+              <div className="bg-green-100 text-green-700 p-4 rounded-md font-medium">
+                ✅ <strong>No Tumor Detected</strong>
+              </div>
+            )}
+          </div>
+
+          {/* Images */}
+          <div className={`grid md:grid-cols-2 gap-6 transition-all duration-500 ${!isDownloading ? "blur-sm" : ""}`}>
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-center">🖼️ Original MRI Image</h3>
+              <img
+                src={imageUrl}
+                alt="MRI Scan"
+                className="rounded-lg border w-full object-contain"
+              />
             </div>
-          ) : (
-            <div className="text-green-600 font-bold">No Tumor Detected ✅</div>
-          )}
-
-          <hr className="my-4" />
-
-          {/* MRI Image */}
-          <h2 className="text-lg font-semibold mb-2">MRI Image</h2>
-          <img
-            src={imageUrl}
-            alt="MRI Scan"
-            className="w-1/2 rounded-md mb-4 m-auto"
-          />
-
-          {/* Segmented Image */}
-          <h2 className="text-lg font-semibold mb-2">Segmented Image</h2>
-          <img
-            src={segmentedUrl}
-            alt="Segmented Output"
-            className="w-1/2 rounded-md mb-4 m-auto"
-          />
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-center">🎯 Segmented Image</h3>
+              <img
+                src={segmentedUrl}
+                alt="Segmented Output"
+                className="rounded-lg border w-full object-contain"
+              />
+            </div>
+          </div>
 
           {/* Download Button */}
-          <button
-            className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-            onClick={handleDownload}
-          >
-            Download PDF Report
-          </button>
+          <div className="text-center mt-8">
+            <button
+              disabled={loading}
+              onClick={handleDownload}
+              className={`px-8 py-3 text-lg rounded shadow-md transition-colors duration-300 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
+            >
+              {loading ? "Checking Login..." : "📄 Download PDF Report"}
+            </button>
+          </div>
         </div>
       </div>
     </>

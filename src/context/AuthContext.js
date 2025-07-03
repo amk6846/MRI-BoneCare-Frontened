@@ -7,29 +7,51 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // ✅ NEW
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ Check localStorage on first load (persist login status)
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLoggedIn");
-    if (storedLogin === "true") {
-      setIsLoggedIn(true);
+    const storedUserRaw = localStorage.getItem("loggedInUser");
+  
+    let storedUser = null;
+    if (storedUserRaw) {
+      try {
+        storedUser = JSON.parse(storedUserRaw);
+      } catch (error) {
+        console.error("Failed to parse stored user:", error);
+        storedUser = null;
+      }
     }
+  
+    if (storedLogin === "true" && storedUser) {
+      setIsLoggedIn(true);
+      setUser(storedUser); // ✅ make sure you have setUser in state
+    } else {
+      setIsLoggedIn(false);
+      setUser(null); // optional
+    }
+  
+    setLoading(false);
   }, []);
 
-  const login = () => {
-    localStorage.setItem("isLoggedIn", "true");
+  const login = (user) => {
     setIsLoggedIn(true);
+    setUser(user); // ✅
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
   };
 
   const logout = () => {
-    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
-    router.push("/Login");
+    setUser(null);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("loggedInUser");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, user, loading }}>
       {children}
     </AuthContext.Provider>
   );

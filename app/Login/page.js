@@ -1,18 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/src/context/AuthContext";
 
 const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // ✅ Green box
+  const [error, setError] = useState("");        // ✅ Red box
+  const { user, login } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/tools");
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login form submitted");
+    setLoading(true);
+    setSuccess(false);
+    setError("");
 
     try {
       const res = await fetch("/api/login", {
@@ -25,77 +38,103 @@ const LoginPage = () => {
 
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
+        login(data.user, data.token);
+        setSuccess(true);
 
-        localStorage.setItem("isLoggedIn", "true"); // ✅ add kiya localStorage ke liye
-        alert("Login Successful ✅");
-        router.push("/tools");
+        setTimeout(() => {
+          router.push("/tools");
+        }, 2000);
       } else {
         const errorData = await res.json();
-        alert(errorData.message || "Login Failed ❌");
+        setError(errorData.message || "Login failed ❌");
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Something went wrong ❗");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong ❗");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
 
-      <div className="flex items-center justify-center min-h-screen text-center bg-gray-200">
-        <div>
-          <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      <div className="flex items-center justify-center min-h-screen text-center bg-gray-200 px-4">
+        <div className="relative bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+
+          {/* ✅ Success Box */}
+          {success && (
+            <div className="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-2 rounded shadow">
+              ✅ Login Successful! Redirecting...
+            </div>
+          )}
+
+          {/* ❌ Error Box */}
+          {error && (
+            <div className="mb-4 bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded shadow">
+              ❌ {error}
+            </div>
+          )}
+
+          <h2 className="text-xl font-bold text-neutral-800">
             Welcome to BoneCare
           </h2>
-          <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
+          <p className="mt-2 text-sm text-neutral-600">
             Login to download your bone tumor detection report.
           </p>
 
           <form className="my-8" onSubmit={handleSubmit}>
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
+            <div className={cn("flex w-full flex-col space-y-2", "mb-4")}>
+              <label htmlFor="email" className="text-left font-medium text-sm">
+                Email Address
+              </label>
+              <input
                 id="email"
                 placeholder="abc12@gmail.com"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="px-4 py-2 border rounded-md"
+                disabled={loading}
+                required
               />
-            </LabelInputContainer>
+            </div>
 
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="password">Password</Label>
-              <Input
+            <div className={cn("flex w-full flex-col space-y-2", "mb-4")}>
+              <label htmlFor="password" className="text-left font-medium text-sm">
+                Password
+              </label>
+              <input
                 id="password"
                 placeholder="••••••••"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="px-4 py-2 border rounded-md"
+                disabled={loading}
+                required
               />
-            </LabelInputContainer>
+            </div>
 
             <button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] mb-6"
+              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-md mb-6"
               type="submit"
+              disabled={loading}
             >
-              Login &rarr;
-              <BottomGradient />
+              {loading ? "Processing..." : "Login →"}
             </button>
 
-            <h2 className="text-md font-bold text-neutral-800 dark:text-neutral-200">
-              Don’t have an account?
+            <h2 className="text-md font-bold text-neutral-800">
+              Don't have an account?
             </h2>
             <button
               onClick={() => router.push("/SignUp")}
-              className="group/btn relative block h-10 w-2/4 rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] mt-2 mx-auto"
+              className="group/btn relative block h-10 w-2/4 rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-md mt-2 mx-auto"
               type="button"
+              disabled={loading}
             >
-              Sign up &rarr;
-              <BottomGradient />
+              Sign up →
             </button>
           </form>
         </div>
@@ -103,36 +142,5 @@ const LoginPage = () => {
     </>
   );
 };
-
-const BottomGradient = () => (
-  <>
-    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-  </>
-);
-
-const LabelInputContainer = ({ children, className }) => (
-  <div className={cn("flex w-full flex-col space-y-2", className)}>
-    {children}
-  </div>
-);
-
-const Input = ({ id, placeholder, type, value, onChange }) => (
-  <input
-    id={id}
-    placeholder={placeholder}
-    type={type}
-    value={value}
-    onChange={onChange}
-    className="px-4 py-2 border rounded-md"
-    required
-  />
-);
-
-const Label = ({ htmlFor, children }) => (
-  <label htmlFor={htmlFor} className="text-left font-medium text-sm">
-    {children}
-  </label>
-);
 
 export default LoginPage;
