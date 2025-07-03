@@ -77,7 +77,7 @@ const Testimonials = () => {
                   <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="rounded-full mb-4 border-2 border-blue-500 shadow-md"/>
                   <h3 className="text-xl font-semibold text-gray-800">{testimonial.name}</h3>
                   <p className="text-gray-600 italic">{testimonial.title} - {testimonial.hospital}</p>
-                  <p className="text-gray-700 mt-4">"{testimonial.feedback}"</p>
+                  <p className="text-gray-700 mt-4">&quot;{testimonial.feedback}&quot;</p>
                 </motion.div>
               ))}
             </motion.div>

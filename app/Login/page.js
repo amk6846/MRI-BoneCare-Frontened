@@ -126,7 +126,7 @@ const LoginPage = () => {
             </button>
 
             <h2 className="text-md font-bold text-neutral-800">
-              Don't have an account?
+            Don&apos;t have an account?
             </h2>
             <button
               onClick={() => router.push("/SignUp")}
