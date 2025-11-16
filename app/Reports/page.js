@@ -12,6 +12,7 @@ const ResultPage = () => {
   const [imageUrl, setImageUrl] = useState("/sample-mri.jpg");
   const [segmentedUrl, setSegmentedUrl] = useState("/sample-mask.jpg");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [blurContent, setBlurContent] = useState(true); // initially blur
 
   useEffect(() => {
     const storedMRI = localStorage.getItem("mriImage");
@@ -41,7 +42,16 @@ const ResultPage = () => {
   const handleDownload = () => {
     if (loading || isGenerating) return;
 
+    // if (loading) return;
+      // Check if user is logged in
+      useEffect(() => {
+        if (!loading && !isLoggedIn) {
+          router.push("/login");
+        }
+      }, [loading, isLoggedIn]);
+
     setIsGenerating(true);
+    setBlurContent(false); // remove blur and highlight before PDF
 
     setTimeout(() => {
       router.push(
@@ -67,7 +77,7 @@ const ResultPage = () => {
             🧠 MRI Tumor Diagnosis Report
           </h1>
 
-          {/* Patient Info */}
+          {/* Patient Info - always clear */}
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
               👤 Patient Information
@@ -85,47 +95,54 @@ const ResultPage = () => {
             </div>
           </div>
 
-          {/* Diagnosis */}
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
-              🩺 Diagnosis Result
-            </h2>
-            {result.tumorDetected ? (
-              <div className="bg-red-100 text-red-700 p-4 rounded-md font-medium">
-                ✅ <strong>Tumor Detected</strong>
-                <br />
-                <span>Type: {result.tumorType}</span>
-                <br />
-                <span>Confidence: {result.confidence}%</span>
-              </div>
-            ) : (
-              <div className="bg-green-100 text-green-700 p-4 rounded-md font-medium">
-                ✅ <strong>No Tumor Detected</strong>
-              </div>
-            )}
-          </div>
-
-          {/* Images */}
-          <div className="grid md:grid-cols-2 gap-6 transition-all duration-500">
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">
-                🖼️ Original MRI Image
-              </h3>
-              <img
-                src={imageUrl}
-                alt="MRI Scan"
-                className="rounded-lg border w-full object-contain"
-              />
+          {/* Diagnosis + Images - blur initially */}
+          <div
+            className={`transition-all duration-500 ${
+              blurContent ? "filter blur-sm pointer-events-none" : "filter blur-0 bg-blue-50 rounded-lg p-2"
+            }`}
+          >
+            {/* Diagnosis */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
+                🩺 Diagnosis Result
+              </h2>
+              {result.tumorDetected ? (
+                <div className="bg-red-100 text-red-700 p-4 rounded-md font-medium">
+                  ✅ <strong>Tumor Detected</strong>
+                  <br />
+                  <span>Type: {result.tumorType}</span>
+                  <br />
+                  <span>Confidence: {result.confidence}%</span>
+                </div>
+              ) : (
+                <div className="bg-green-100 text-green-700 p-4 rounded-md font-medium">
+                  ✅ <strong>No Tumor Detected</strong>
+                </div>
+              )}
             </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">
-                🎯 Segmented Image
-              </h3>
-              <img
-                src={segmentedUrl}
-                alt="Segmented Output"
-                className="rounded-lg border w-full object-contain"
-              />
+
+            {/* Images */}
+            <div className="grid md:grid-cols-2 gap-6 transition-all duration-500">
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-center">
+                  🖼️ Original MRI Image
+                </h3>
+                <img
+                  src={imageUrl}
+                  alt="MRI Scan"
+                  className="rounded-lg border w-full object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-center">
+                  🎯 Segmented Image
+                </h3>
+                <img
+                  src={segmentedUrl}
+                  alt="Segmented Output"
+                  className="rounded-lg border w-full object-contain"
+                />
+              </div>
             </div>
           </div>
 

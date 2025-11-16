@@ -41,10 +41,3 @@ node_modules/
 .env
 .vscode/
 
-public/images/
-public/images/doctors/
-public/images/icons/
-
-mri-backend/__pycache__/
-mri-backend/venv/
-mri-backend/Best.pt/
