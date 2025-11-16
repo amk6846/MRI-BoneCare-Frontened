@@ -39,7 +39,7 @@ const ResultPage = () => {
   useEffect(() => {
     if (downloadClicked) {
       if (!isLoggedIn) {
-        router.push("/login");
+        router.push("/Login");
       } else {
         setBlurContent(false); // remove blur
         setIsGenerating(true);

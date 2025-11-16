@@ -1,6 +1,9 @@
+"use client"
 import connectMongoDB from "@/lib/mongodb";
 import User from "@/models/user";
 import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req) {
   const email = req.headers.get("email");
