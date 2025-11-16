@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../src/context/AuthContext";
 
+export const dynamic = 'force-dynamic';
+
 const ResultPage = () => {
   const { isLoggedIn, loading, user } = useAuth();
   const router = useRouter();

@@ -4,6 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
+export const dynamic = 'force-dynamic';
+
+
 export default function TumorReport() {
   const searchParams = useSearchParams();
   const reportRef = useRef();
