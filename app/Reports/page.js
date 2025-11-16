@@ -42,13 +42,11 @@ const ResultPage = () => {
   const handleDownload = () => {
     if (loading || isGenerating) return;
 
-    // if (loading) return;
-      // Check if user is logged in
-      useEffect(() => {
-        if (!loading && !isLoggedIn) {
-          router.push("/Login");
-        }
-      }, [loading, isLoggedIn]);
+    useEffect(() => {
+      if (!loading && !isLoggedIn) {
+        router.push("/login");
+      }
+    }, [loading, isLoggedIn]);
 
     setIsGenerating(true);
     setBlurContent(false); // remove blur and highlight before PDF
