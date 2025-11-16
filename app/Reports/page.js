@@ -9,64 +9,58 @@ const ResultPage = () => {
   const { isLoggedIn, loading, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [imageUrl, setImageUrl] = useState("/sample-mri.jpg");
   const [segmentedUrl, setSegmentedUrl] = useState("/sample-mask.jpg");
   const [isGenerating, setIsGenerating] = useState(false);
   const [blurContent, setBlurContent] = useState(true); // initially blur
+  const [downloadClicked, setDownloadClicked] = useState(false); // for triggering download
 
+  // Load images from localStorage
   useEffect(() => {
     const storedMRI = localStorage.getItem("mriImage");
     const storedSegmented = localStorage.getItem("segmentedImage");
 
-    if (storedMRI) {
-      setImageUrl(`data:image/jpeg;base64,${storedMRI}`);
-    }
-
-    if (storedSegmented) {
-      setSegmentedUrl(`data:image/jpeg;base64,${storedSegmented}`);
-    } else if (storedMRI) {
-      setSegmentedUrl(`data:image/jpeg;base64,${storedMRI}`);
-    }
+    if (storedMRI) setImageUrl(`data:image/jpeg;base64,${storedMRI}`);
+    if (storedSegmented) setSegmentedUrl(`data:image/jpeg;base64,${storedSegmented}`);
+    else if (storedMRI) setSegmentedUrl(`data:image/jpeg;base64,${storedMRI}`);
   }, []);
 
   const result = {
     patientName: user?.name || searchParams.get("name") || "Unknown",
     email: user?.email || searchParams.get("email") || "unknown@example.com",
-    uploadDate:
-      searchParams.get("date") || new Date().toISOString().split("T")[0],
+    uploadDate: searchParams.get("date") || new Date().toISOString().split("T")[0],
     tumorDetected: searchParams.get("detected") === "true",
     tumorType: searchParams.get("type") || "Unknown Type",
     confidence: searchParams.get("confidence") || "N/A",
   };
 
-  const handleDownload = () => {
-    if (loading || isGenerating) return;
+  // Handle download / login check
+  useEffect(() => {
+    if (downloadClicked) {
+      if (!isLoggedIn) {
+        router.push("/login");
+      } else {
+        setBlurContent(false); // remove blur
+        setIsGenerating(true);
 
-    // if (loading) return;
-      // Check if user is logged in
-      useEffect(() => {
-        if (!loading && !isLoggedIn) {
-          router.push("/login");
-        }
-      }, [loading, isLoggedIn]);
-
-    setIsGenerating(true);
-    setBlurContent(false); // remove blur and highlight before PDF
-
-    setTimeout(() => {
-      router.push(
-        `/TumorReport?name=${encodeURIComponent(
-          result.patientName
-        )}&email=${encodeURIComponent(
-          result.email
-        )}&date=${encodeURIComponent(
-          result.uploadDate
-        )}&detected=${result.tumorDetected}&type=${encodeURIComponent(
-          result.tumorType
-        )}&confidence=${encodeURIComponent(result.confidence)}`
-      );
-    }, 2000);
-  };
+        setTimeout(() => {
+          router.push(
+            `/TumorReport?name=${encodeURIComponent(
+              result.patientName
+            )}&email=${encodeURIComponent(
+              result.email
+            )}&date=${encodeURIComponent(
+              result.uploadDate
+            )}&detected=${result.tumorDetected}&type=${encodeURIComponent(
+              result.tumorType
+            )}&confidence=${encodeURIComponent(result.confidence)}`
+          );
+        }, 2000);
+      }
+      setDownloadClicked(false); // reset
+    }
+  }, [downloadClicked, isLoggedIn]);
 
   return (
     <>
@@ -77,7 +71,7 @@ const ResultPage = () => {
             🧠 MRI Tumor Diagnosis Report
           </h1>
 
-          {/* Patient Info - always clear */}
+          {/* Patient Info */}
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
               👤 Patient Information
@@ -95,13 +89,14 @@ const ResultPage = () => {
             </div>
           </div>
 
-          {/* Diagnosis + Images - blur initially */}
+          {/* Diagnosis + Images - blur */}
           <div
             className={`transition-all duration-500 ${
-              blurContent ? "filter blur-sm pointer-events-none" : "filter blur-0 bg-blue-50 rounded-lg p-2"
+              blurContent
+                ? "filter blur-sm pointer-events-none"
+                : "filter blur-0 bg-blue-50 rounded-lg p-2"
             }`}
           >
-            {/* Diagnosis */}
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-gray-700 mb-2 border-b pb-1">
                 🩺 Diagnosis Result
@@ -121,12 +116,9 @@ const ResultPage = () => {
               )}
             </div>
 
-            {/* Images */}
             <div className="grid md:grid-cols-2 gap-6 transition-all duration-500">
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-center">
-                  🖼️ Original MRI Image
-                </h3>
+                <h3 className="text-lg font-semibold mb-2 text-center">🖼️ Original MRI Image</h3>
                 <img
                   src={imageUrl}
                   alt="MRI Scan"
@@ -134,9 +126,7 @@ const ResultPage = () => {
                 />
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-center">
-                  🎯 Segmented Image
-                </h3>
+                <h3 className="text-lg font-semibold mb-2 text-center">🎯 Segmented Image</h3>
                 <img
                   src={segmentedUrl}
                   alt="Segmented Output"
@@ -150,7 +140,7 @@ const ResultPage = () => {
           <div className="text-center mt-8">
             <button
               disabled={loading || isGenerating}
-              onClick={handleDownload}
+              onClick={() => setDownloadClicked(true)}
               className={`px-8 py-3 text-lg rounded shadow-md flex items-center justify-center gap-2 transition-colors duration-300 ${
                 loading || isGenerating
                   ? "bg-gray-400 cursor-not-allowed"
