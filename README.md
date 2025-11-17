@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+MRI BoneCare
+============
 
-## Getting Started
+Description:
+------------
+MRI BoneCare is a web-based platform for **automatic detection, segmentation, and classification of primary bone tumors** using MRI scans. 
+It leverages an **ensemble multi-task deep learning framework** for accurate diagnosis and report generation. 
+Users can upload MRI images, view results, and download PDF reports.
 
-First, run the development server:
+Features:
+---------
+1. **MRI Upload:** Users can upload MRI scans for analysis.
+2. **Automatic Detection:** Detects presence of primary bone tumors.
+3. **Segmentation:** Highlights tumor regions on MRI images.
+4. **Classification:** Provides tumor type and confidence score.
+5. **PDF Report:** Generates downloadable report with patient info and analysis.
+6. **Authentication:** User login system to secure access.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Technologies Used:
+------------------
+- **Frontend:** Next.js, React.js, TailwindCSS
+- **Backend:** Python, FastAPI (or Next.js API Routes)
+- **Database:** MongoDB
+- **Machine Learning Models:**
+  - Faster R-CNN for detection
+  - Unet++ for segmentation
+  - ResNet25 for classification
+- **PDF Generation:** html2canvas + jsPDF
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Installation & Setup:
+--------------------
+1. Clone the repository:
+2. Install dependencies:
+3. Configure environment variables:
+- Create a `.env` file
+- Add MongoDB connection string:
+  ```
+  MONGODB_URI=<your_mongo_connection_string>
+  ```
+4. Run the development server:
+5. Visit `http://localhost:3000` to access the app.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Usage:
+------
+- Login or create an account
+- Upload MRI scan
+- View detection results
+- Download PDF report
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Folder Structure:
+-----------------
+- `/app`        - Next.js app pages and components
+- `/src/models` - MongoDB schema models
+- `/src/lib`    - MongoDB connection helper
+- `/public`     - Static assets like images
+- `/ml-models`  - Pre-trained models for tumor detection, segmentation, classification
 
-## Learn More
+Contact:
+--------
+For any issues or inquiries, contact **[Abdul Majid / amk684678@gmail.com]**.
 
-To learn more about Next.js, take a look at the following resources:
+License:
+--------
+This project is for **educational purposes**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
