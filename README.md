@@ -18,7 +18,7 @@ Features:
 
 Technologies Used:
 ------------------
-- **Frontend:** Next.js, React.js, TailwindCSS
+- **Frontend:** Next.js, TailwindCSS
 - **Backend:** Python, FastAPI (or Next.js API Routes)
 - **Database:** MongoDB
 - **Machine Learning Models:**
